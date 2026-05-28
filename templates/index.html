@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Análise de Imagem IA</title>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Análise Inteligente de Imagens</h1>
+
+      <form method="POST" enctype="multipart/form-data" class="upload-form">
+        <label for="foto" class="upload-label"> Escolher Imagem </label>
+
+        <input type="file" name="foto" id="foto" accept="image/*" required />
+
+        <button type="submit">Analisar Imagem</button>
+      </form>
+
+      <div class="preview-area">
+        <img id="preview" src="" alt="" />
+      </div>
+
+      {% if imagem_exibir %}
+
+      <div class="resultado">
+        <h2>Resultado da Análise</h2>
+
+        <img
+          src="{{ url_for('static', filename='uploads/resultado.jpg') }}?v={{ v }}"
+          class="imagem-resultado"
+        />
+
+        <div class="dados">
+          <p>
+            <strong>Legenda:</strong>
+            {{ analise.legenda }}
+          </p>
+
+          <p>
+            <strong>Confiança:</strong>
+            {{ analise.confianca }}
+          </p>
+
+          <div class="tags">
+            <strong>Tags:</strong>
+
+            {% for tag in analise.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      {% endif %}
+    </div>
+
+    <script>
+      const inputFoto = document.getElementById("foto");
+      const preview = document.getElementById("preview");
+
+      inputFoto.addEventListener("change", function () {
+        const arquivo = this.files[0];
+
+        if (arquivo) {
+          const leitor = new FileReader();
+
+          leitor.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+          };
+
+          leitor.readAsDataURL(arquivo);
+        }
+      });
+    </script>
+  </body>
+</html>
